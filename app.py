@@ -6,8 +6,17 @@ This file demonstrates a Flask-based login application.
 """
 
 from flask import Flask, request, render_template_string
+from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
+
+users = {
+    "Alex": bcrypt.generate_password_hash("Alex1234"),
+    "Bill": bcrypt.generate_password_hash("Bill1234"),
+    "Chaz": bcrypt.generate_password_hash("Chaz1234"),
+    "test_user_CSE": bcrypt.generate_password_hash("testPassword123"),
+}
 
 
 # Route to display the login form
@@ -37,7 +46,14 @@ def login():
     username = request.form['username']
     password = request.form['password']
     # Handle the login logic here
-    return f'Username: {username}. Password: {password}'
+    if username in users:
+        if bcrypt.check_password_hash(users[username], password):
+            ret_string = f'Username: {username}. Password: {users[username]}'
+        else:
+            ret_string = f'Invalid password for username: {username}.'
+    else:
+        ret_string = f'Unknown username: {username}.'
+    return ret_string
 
 
 if __name__ == '__main__':
