@@ -14,10 +14,10 @@ the entered password with the stored hashed value.  Reports if the username
 is not in the dictionary or if the password does not match the hashed value.
 
 route('/register')
-Prompts user to enter a new username and password to be added to the user
-dictionary.  Validates that the selected username is not already in use
-and that the username and password meet various good security practices such
-as minimal length, etc.
+Prompts user to enter a new username and password (entered twice) to be added
+to the user dictionary.  Validates that the selected username is not already
+in use and that the username and password meet various basic security practices
+such as minimal length, etc.
 """
 
 from flask import Flask, request, render_template_string
@@ -28,6 +28,7 @@ import re
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
+# Define user dictionary with initial set of members for test purposes
 users = {
     "Alex": bcrypt.generate_password_hash("Alex1234"),
     "Bill": bcrypt.generate_password_hash("Bill1234"),
@@ -95,6 +96,7 @@ def login():
     return ret_string
 
 
+# Constant for enforcing minimum password length
 MIN_PWD_LENGTH = 8
 
 
